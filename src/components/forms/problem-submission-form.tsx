@@ -103,35 +103,35 @@ const ProblemSubmissionForm = () => {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
-      <div className="container mx-auto px-8 py-8">
-        <Link to="/" className="inline-flex items-center text-white/70 hover:text-white mb-8">
+      <div className="container mx-auto px-4 sm:px-6 md:px-8 py-6 sm:py-8">
+        <Link to="/" className="inline-flex items-center text-white/70 hover:text-white mb-6 sm:mb-8">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Home
         </Link>
         
         <div className="max-w-2xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold mb-4">Submit Your Problem</h1>
-            <p className="text-white/70 text-lg">
+          <div className="text-center mb-8 sm:mb-12">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">Submit Your Problem</h1>
+            <p className="text-white/70 text-base sm:text-lg px-2">
               Share your AI challenge with our expert community
             </p>
           </div>
 
-          <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
+          <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-4 sm:p-6 md:p-8 border border-white/10">
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                   <FormField
                     control={form.control}
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">Name / Team Name *</FormLabel>
+                        <FormLabel className="text-white text-sm sm:text-base">Name / Team Name *</FormLabel>
                         <FormControl>
                           <Input 
                             placeholder="Your name or team name" 
                             {...field} 
-                            className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                            className="bg-white/10 border-white/20 text-white placeholder:text-white/50 text-sm sm:text-base"
                           />
                         </FormControl>
                         <FormMessage />
@@ -144,10 +144,10 @@ const ProblemSubmissionForm = () => {
                     name="affiliation"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">Affiliation *</FormLabel>
+                        <FormLabel className="text-white text-sm sm:text-base">Affiliation *</FormLabel>
                         <Select onValueChange={field.onChange} value={field.value}>
                           <FormControl>
-                            <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                            <SelectTrigger className="bg-white/10 border-white/20 text-white text-sm sm:text-base">
                               <SelectValue placeholder="Select your affiliation" />
                             </SelectTrigger>
                           </FormControl>
@@ -174,13 +174,13 @@ const ProblemSubmissionForm = () => {
                   name="contactEmail"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white">Contact Email *</FormLabel>
+                      <FormLabel className="text-white text-sm sm:text-base">Contact Email *</FormLabel>
                       <FormControl>
                         <Input 
                           type="email" 
                           placeholder="your.email@example.com" 
                           {...field} 
-                          className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                          className="bg-white/10 border-white/20 text-white placeholder:text-white/50 text-sm sm:text-base"
                         />
                       </FormControl>
                       <FormMessage />
@@ -193,12 +193,12 @@ const ProblemSubmissionForm = () => {
                   name="problemTitle"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white">Problem Title *</FormLabel>
+                      <FormLabel className="text-white text-sm sm:text-base">Problem Title *</FormLabel>
                       <FormControl>
                         <Input 
                           placeholder="A concise title for your problem statement" 
                           {...field} 
-                          className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                          className="bg-white/10 border-white/20 text-white placeholder:text-white/50 text-sm sm:text-base"
                         />
                       </FormControl>
                       <FormMessage />
@@ -211,11 +211,11 @@ const ProblemSubmissionForm = () => {
                   name="problemDescription"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white">Problem Description *</FormLabel>
+                      <FormLabel className="text-white text-sm sm:text-base">Problem Description *</FormLabel>
                       <FormControl>
                         <Textarea 
                           placeholder="Describe your problem in detail. Include the current situation, challenges you're facing, and what you hope to achieve."
-                          className="min-h-[120px] bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                          className="min-h-[120px] bg-white/10 border-white/20 text-white placeholder:text-white/50 text-sm sm:text-base"
                           {...field} 
                         />
                       </FormControl>
@@ -229,10 +229,10 @@ const ProblemSubmissionForm = () => {
                   name="category"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white">Category *</FormLabel>
+                      <FormLabel className="text-white text-sm sm:text-base">Category *</FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
-                          <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                          <SelectTrigger className="bg-white/10 border-white/20 text-white text-sm sm:text-base">
                             <SelectValue placeholder="Select problem category" />
                           </SelectTrigger>
                         </FormControl>
@@ -258,14 +258,14 @@ const ProblemSubmissionForm = () => {
                   name="additionalFilesLinks"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2 text-white">
+                      <FormLabel className="flex items-center gap-2 text-white text-sm sm:text-base">
                         <Upload className="w-4 h-4" />
                         Additional Files / Links
                       </FormLabel>
                       <FormControl>
                         <Textarea 
                           placeholder="Share any relevant documents, datasets, or links that provide more context (URLs, Google Drive links, etc.)"
-                          className="min-h-[80px] bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                          className="min-h-[80px] bg-white/10 border-white/20 text-white placeholder:text-white/50 text-sm sm:text-base"
                           {...field} 
                         />
                       </FormControl>
@@ -274,8 +274,8 @@ const ProblemSubmissionForm = () => {
                   )}
                 />
 
-                <div className="bg-white/5 p-4 rounded-lg border border-white/10">
-                  <p className="text-sm text-white/70">
+                <div className="bg-white/5 p-3 sm:p-4 rounded-lg border border-white/10">
+                  <p className="text-xs sm:text-sm text-white/70 leading-relaxed">
                     <strong>Privacy Notice:</strong> Your information will only be used for club communications and project review. 
                     We respect your privacy and will not share your details with third parties without your consent.
                   </p>
@@ -283,7 +283,7 @@ const ProblemSubmissionForm = () => {
 
                 <Button 
                   type="submit" 
-                  className="w-full bg-white text-black hover:bg-gray-200 font-semibold py-3" 
+                  className="w-full bg-white text-black hover:bg-gray-200 font-semibold py-3 text-sm sm:text-base" 
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
