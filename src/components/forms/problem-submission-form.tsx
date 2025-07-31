@@ -80,12 +80,11 @@ const ProblemSubmissionForm = () => {
   };
 
   const affiliations = [
-    "DUK Student",
     "TCS Employee", 
+    "DUK",
     "Academic Researcher",
     "Industry Professional",
-    "Startup/Entrepreneur",
-    "Other"
+    "Startup/Entrepreneur"
   ];
 
   const categories = [
