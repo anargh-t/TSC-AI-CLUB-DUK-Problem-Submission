@@ -19,6 +19,12 @@ const formSchema = z.object({
   problemTitle: z.string().min(5, "Problem title must be at least 5 characters"),
   problemDescription: z.string().min(20, "Problem description must be at least 20 characters"),
   category: z.string().min(1, "Please select a category"),
+  customCategory: z.string().optional().refine((val, ctx) => {
+    if (ctx.parent.category === "Other" && (!val || val.trim().length < 2)) {
+      return false;
+    }
+    return true;
+  }, "Please enter a custom category (at least 2 characters)"),
   additionalFilesLinks: z.string().optional(),
 });
 
@@ -37,6 +43,7 @@ const ProblemSubmissionForm = () => {
       problemTitle: "",
       problemDescription: "",
       category: "",
+      customCategory: "",
       additionalFilesLinks: "",
     },
   });
@@ -53,7 +60,7 @@ const ProblemSubmissionForm = () => {
           contact_email: data.contactEmail,
           problem_title: data.problemTitle,
           problem_description: data.problemDescription,
-          category: data.category,
+          category: data.category === "Other" ? data.customCategory : data.category,
           additional_files_links: data.additionalFilesLinks || null,
         });
 
@@ -98,6 +105,8 @@ const ProblemSubmissionForm = () => {
     "Digital Transformation",
     "Other"
   ];
+
+  const selectedCategory = form.watch("category");
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -252,6 +261,26 @@ const ProblemSubmissionForm = () => {
                   )}
                 />
 
+                {selectedCategory === "Other" && (
+                  <FormField
+                    control={form.control}
+                    name="customCategory"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-white text-sm sm:text-base">Custom Category *</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Enter a custom category" 
+                            {...field} 
+                            className="bg-white/10 border-white/20 text-white placeholder:text-white/50 text-sm sm:text-base"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+
                 <FormField
                   control={form.control}
                   name="additionalFilesLinks"
@@ -259,7 +288,7 @@ const ProblemSubmissionForm = () => {
                     <FormItem>
                       <FormLabel className="flex items-center gap-2 text-white text-sm sm:text-base">
                         <Upload className="w-4 h-4" />
-                        Additional Files / Links
+                        Additional file links
                       </FormLabel>
                       <FormControl>
                         <Textarea 
