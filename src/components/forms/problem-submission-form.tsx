@@ -19,12 +19,7 @@ const formSchema = z.object({
   problemTitle: z.string().min(5, "Problem title must be at least 5 characters"),
   problemDescription: z.string().min(20, "Problem description must be at least 20 characters"),
   category: z.string().min(1, "Please select a category"),
-  customCategory: z.string().optional().refine((val, ctx) => {
-    if (ctx.parent.category === "Other" && (!val || val.trim().length < 2)) {
-      return false;
-    }
-    return true;
-  }, "Please enter a custom category (at least 2 characters)"),
+  customCategory: z.string().optional(),
   additionalFilesLinks: z.string().optional(),
 });
 
@@ -49,25 +44,78 @@ const ProblemSubmissionForm = () => {
   });
 
   const onSubmit = async (data: FormData) => {
+    console.log("=== FORM SUBMISSION STARTED ===");
+    console.log("Form data:", data);
+    console.log("Form validation errors:", form.formState.errors);
+    console.log("Form is dirty:", form.formState.isDirty);
+    console.log("Form is valid:", form.formState.isValid);
+    
+    // Check if form is valid
+    const isValid = await form.trigger();
+    console.log("Form validation result:", isValid);
+    
+    if (!isValid) {
+      console.log("Form validation failed");
+      console.log("Validation errors:", form.formState.errors);
+      toast({
+        title: "Validation Error",
+        description: "Please check all required fields and try again.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Additional validation for custom category
+    if (data.category === "Other" && (!data.customCategory || data.customCategory.trim().length < 2)) {
+      console.log("Custom category validation failed");
+      toast({
+        title: "Validation Error",
+        description: "Please enter a custom category (at least 2 characters).",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsSubmitting(true);
+    console.log("Setting isSubmitting to true");
     
     try {
+      // First, let's test if we can connect to Supabase
+      console.log("Testing Supabase connection...");
+      const { data: testData, error: testError } = await supabase
+        .from("problem_submissions")
+        .select("id")
+        .limit(1);
+      
+      if (testError) {
+        console.error("Supabase connection test failed:", testError);
+        throw new Error(`Database connection failed: ${testError.message}`);
+      }
+      
+      console.log("Supabase connection successful");
+
+      const submissionData = {
+        name: data.name,
+        affiliation: data.affiliation,
+        contact_email: data.contactEmail,
+        problem_title: data.problemTitle,
+        problem_description: data.problemDescription,
+        category: data.category === "Other" ? data.customCategory : data.category,
+        additional_files_links: data.additionalFilesLinks || null,
+      };
+
+      console.log("Submitting data:", submissionData);
+
       const { error } = await supabase
         .from("problem_submissions")
-        .insert({
-          name: data.name,
-          affiliation: data.affiliation,
-          contact_email: data.contactEmail,
-          problem_title: data.problemTitle,
-          problem_description: data.problemDescription,
-          category: data.category === "Other" ? data.customCategory : data.category,
-          additional_files_links: data.additionalFilesLinks || null,
-        });
+        .insert(submissionData);
 
       if (error) {
+        console.error("Supabase error:", error);
         throw error;
       }
 
+      console.log("Submission successful");
       toast({
         title: "Problem Submitted Successfully!",
         description: "Thank you for your submission. Our team will review it and get back to you soon.",
@@ -78,12 +126,14 @@ const ProblemSubmissionForm = () => {
       console.error("Error submitting problem:", error);
       toast({
         title: "Submission Failed",
-        description: "There was an error submitting your problem. Please try again.",
+        description: error instanceof Error ? error.message : "There was an error submitting your problem. Please try again.",
         variant: "destructive",
       });
     } finally {
+      console.log("Setting isSubmitting to false");
       setIsSubmitting(false);
     }
+    console.log("=== FORM SUBMISSION ENDED ===");
   };
 
   const affiliations = [
@@ -127,7 +177,10 @@ const ProblemSubmissionForm = () => {
 
           <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-4 sm:p-6 md:p-8 border border-white/10">
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
+              <form 
+                onSubmit={form.handleSubmit(onSubmit)} 
+                className="space-y-4 sm:space-y-6"
+              >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                   <FormField
                     control={form.control}
