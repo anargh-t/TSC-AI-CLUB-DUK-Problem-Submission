@@ -1,73 +1,197 @@
-# Welcome to your Lovable project
+# TCS AI Club x DUK Portal
 
-## Project info
+A modern web application for the TCS AI Club and DUK collaboration, built with React, TypeScript, and Supabase.
 
-**URL**: https://lovable.dev/projects/24a4e6af-632d-4b82-a08c-6edea77ee1cb
+## 🚀 Quick Start
 
-## How can I edit this code?
+### Prerequisites
+- Node.js (v18 or higher)
+- npm, yarn, or bun package manager
 
-There are several ways of editing your application.
+### Installation
 
-**Use Lovable**
+```bash
+# Clone the repository
+git clone <repository-url>
+cd duk-tcs
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/24a4e6af-632d-4b82-a08c-6edea77ee1cb) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+# Install dependencies
+npm install
+# or
+yarn install
+# or
+bun install
 ```
 
-**Edit a file directly in GitHub**
+### Development
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```bash
+# Start development server
+npm run dev
+# or
+yarn dev
+# or
+bun dev
+```
 
-**Use GitHub Codespaces**
+The application will be available at `http://localhost:8080`
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Available Commands
 
-## What technologies are used for this project?
+```bash
+# Development
+npm run dev          # Start development server with hot reload
+npm run build        # Create production build
+npm run build:dev    # Create development build
+npm run preview      # Preview production build locally
+npm run lint         # Run ESLint for code quality checks
+```
 
-This project is built with:
+## 🏗️ Project Structure
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```
+duk-tcs/
+├── src/
+│   ├── components/          # Reusable UI components
+│   │   ├── forms/          # Form components
+│   │   └── ui/             # Base UI components (shadcn/ui)
+│   ├── hooks/              # Custom React hooks
+│   ├── integrations/       # External service integrations
+│   │   └── supabase/       # Supabase database configuration
+│   ├── lib/                # Utility functions and helpers
+│   ├── pages/              # Page components
+│   ├── App.tsx            # Main application component
+│   ├── main.tsx           # Application entry point
+│   └── index.css          # Global styles
+├── public/                 # Static assets
+├── supabase/              # Database migrations and config
+├── package.json           # Dependencies and scripts
+├── vite.config.ts         # Vite build configuration
+└── tailwind.config.ts     # Tailwind CSS configuration
+```
 
-## How can I deploy this project?
+## 🛠️ Technology Stack
 
-Simply open [Lovable](https://lovable.dev/projects/24a4e6af-632d-4b82-a08c-6edea77ee1cb) and click on Share -> Publish.
+### Frontend
+- **React 18** - UI framework
+- **TypeScript** - Type safety
+- **Vite** - Build tool and dev server
+- **Tailwind CSS** - Styling
+- **shadcn/ui** - Component library
+- **React Hook Form** - Form management
+- **Zod** - Schema validation
 
-## Can I connect a custom domain to my Lovable project?
+### Backend & Services
+- **Supabase** - Database and backend services
+- **React Query** - Server state management
 
-Yes, you can!
+### Development Tools
+- **ESLint** - Code linting
+- **TypeScript** - Type checking
+- **PostCSS** - CSS processing
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 📝 Features
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### Core Functionality
+- **Home Page** - Landing page with navigation and hero section
+- **Problem Submission** - Form for submitting AI challenges
+- **Form Validation** - Client-side validation with Zod schemas
+- **Database Integration** - Supabase for data persistence
+- **Responsive Design** - Mobile-first responsive layout
+
+### User Experience
+- **Dark Theme** - Modern dark UI design
+- **Toast Notifications** - User feedback for actions
+- **Loading States** - Form submission feedback
+- **Error Handling** - Comprehensive error management
+- **Accessibility** - ARIA-compliant components
+
+## 🔧 Configuration
+
+### Environment Variables
+The application uses Supabase for backend services. Configuration is handled in:
+- `src/integrations/supabase/client.ts` - Supabase client setup
+
+### Database Schema
+The application uses the following Supabase table:
+- `problem_submissions` - Stores submitted problem statements
+
+## 🚀 Deployment
+
+### Build for Production
+```bash
+npm run build
+```
+
+### Preview Production Build
+```bash
+npm run preview
+```
+
+### Deployment Options
+- **Vercel** - Recommended for React applications
+- **Netlify** - Static site hosting
+- **Supabase** - Full-stack hosting with database
+
+## 🧪 Development Guidelines
+
+### Code Style
+- Use TypeScript for all new code
+- Follow ESLint configuration
+- Use Prettier for code formatting
+- Write meaningful commit messages
+
+### Component Structure
+- Use functional components with hooks
+- Implement proper TypeScript types
+- Follow React best practices
+- Use shadcn/ui components for consistency
+
+### Form Handling
+- Use React Hook Form for all forms
+- Implement Zod schemas for validation
+- Provide clear error messages
+- Handle loading and success states
+
+## 🔍 Troubleshooting
+
+### Common Issues
+
+**Development server won't start**
+```bash
+# Clear node_modules and reinstall
+rm -rf node_modules package-lock.json
+npm install
+```
+
+**TypeScript errors**
+```bash
+# Check TypeScript configuration
+npm run lint
+```
+
+**Supabase connection issues**
+- Verify Supabase URL and API keys
+- Check network connectivity
+- Review browser console for errors
+
+## 📚 Additional Resources
+
+- [React Documentation](https://react.dev/)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [Vite Documentation](https://vitejs.dev/)
+- [Tailwind CSS Documentation](https://tailwindcss.com/)
+- [Supabase Documentation](https://supabase.com/docs)
+- [shadcn/ui Documentation](https://ui.shadcn.com/)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License.

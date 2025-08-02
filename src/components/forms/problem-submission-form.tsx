@@ -1,3 +1,7 @@
+// Problem Submission Form Component
+// This component handles the submission of AI problem statements to the TCS AI Club
+// Features include form validation, file uploads, and database integration
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,6 +16,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Send, Upload, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 
+// Form validation schema using Zod
+// Defines the structure and validation rules for the form data
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   affiliation: z.string().min(1, "Please select your affiliation"),
@@ -23,12 +29,17 @@ const formSchema = z.object({
   additionalFilesLinks: z.string().optional(),
 });
 
+// TypeScript type derived from the Zod schema
 type FormData = z.infer<typeof formSchema>;
 
 const ProblemSubmissionForm = () => {
+  // State to track form submission status
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Toast notification hook for user feedback
   const { toast } = useToast();
 
+  // Initialize React Hook Form with Zod validation
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -43,6 +54,8 @@ const ProblemSubmissionForm = () => {
     },
   });
 
+  // Form submission handler
+  // Processes form data, validates it, and submits to Supabase
   const onSubmit = async (data: FormData) => {
     console.log("=== FORM SUBMISSION STARTED ===");
     console.log("Form data:", data);
@@ -50,7 +63,7 @@ const ProblemSubmissionForm = () => {
     console.log("Form is dirty:", form.formState.isDirty);
     console.log("Form is valid:", form.formState.isValid);
     
-    // Check if form is valid
+    // Validate form before submission
     const isValid = await form.trigger();
     console.log("Form validation result:", isValid);
     
@@ -65,7 +78,7 @@ const ProblemSubmissionForm = () => {
       return;
     }
     
-    // Additional validation for custom category
+    // Additional validation for custom category when "Other" is selected
     if (data.category === "Other" && (!data.customCategory || data.customCategory.trim().length < 2)) {
       console.log("Custom category validation failed");
       toast({
@@ -76,11 +89,12 @@ const ProblemSubmissionForm = () => {
       return;
     }
     
+    // Set submission state to prevent multiple submissions
     setIsSubmitting(true);
     console.log("Setting isSubmitting to true");
     
     try {
-      // First, let's test if we can connect to Supabase
+      // Test Supabase connection before submitting data
       console.log("Testing Supabase connection...");
       const { data: testData, error: testError } = await supabase
         .from("problem_submissions")
@@ -94,6 +108,8 @@ const ProblemSubmissionForm = () => {
       
       console.log("Supabase connection successful");
 
+      // Prepare data for database insertion
+      // Convert camelCase to snake_case for database columns
       const submissionData = {
         name: data.name,
         affiliation: data.affiliation,
@@ -106,6 +122,7 @@ const ProblemSubmissionForm = () => {
 
       console.log("Submitting data:", submissionData);
 
+      // Insert data into Supabase database
       const { error } = await supabase
         .from("problem_submissions")
         .insert(submissionData);
@@ -115,12 +132,14 @@ const ProblemSubmissionForm = () => {
         throw error;
       }
 
+      // Success feedback
       console.log("Submission successful");
       toast({
         title: "Problem Submitted Successfully!",
         description: "Thank you for your submission. Our team will review it and get back to you soon.",
       });
 
+      // Reset form after successful submission
       form.reset();
     } catch (error) {
       console.error("Error submitting problem:", error);
@@ -130,12 +149,14 @@ const ProblemSubmissionForm = () => {
         variant: "destructive",
       });
     } finally {
+      // Reset submission state
       console.log("Setting isSubmitting to false");
       setIsSubmitting(false);
     }
     console.log("=== FORM SUBMISSION ENDED ===");
   };
 
+  // Predefined options for affiliation dropdown
   const affiliations = [
     "TCS Employee", 
     "DUK",
@@ -144,6 +165,7 @@ const ProblemSubmissionForm = () => {
     "Startup/Entrepreneur"
   ];
 
+  // Predefined options for problem categories
   const categories = [
     "AI/Machine Learning",
     "Data Science",
@@ -156,18 +178,23 @@ const ProblemSubmissionForm = () => {
     "Other"
   ];
 
+  // Watch the selected category to conditionally show custom category field
   const selectedCategory = form.watch("category");
 
   return (
+    // Main container with dark theme
     <div className="min-h-screen bg-black text-white">
-      {/* Header */}
+      {/* Header section with navigation */}
       <div className="container mx-auto px-4 sm:px-6 md:px-8 py-6 sm:py-8">
+        {/* Back navigation link */}
         <Link to="/" className="inline-flex items-center text-white/70 hover:text-white mb-6 sm:mb-8">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Home
         </Link>
         
+        {/* Form container with responsive design */}
         <div className="max-w-2xl mx-auto">
+          {/* Page header */}
           <div className="text-center mb-8 sm:mb-12">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">Submit Your Problem</h1>
             <p className="text-white/70 text-base sm:text-lg px-2">
@@ -175,13 +202,16 @@ const ProblemSubmissionForm = () => {
             </p>
           </div>
 
+          {/* Form wrapper with glassmorphism effect */}
           <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-4 sm:p-6 md:p-8 border border-white/10">
             <Form {...form}>
               <form 
                 onSubmit={form.handleSubmit(onSubmit)} 
                 className="space-y-4 sm:space-y-6"
               >
+                {/* Name and Affiliation fields in a grid layout */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                  {/* Name/Team Name field */}
                   <FormField
                     control={form.control}
                     name="name"
@@ -200,6 +230,7 @@ const ProblemSubmissionForm = () => {
                     )}
                   />
 
+                  {/* Affiliation dropdown */}
                   <FormField
                     control={form.control}
                     name="affiliation"
@@ -230,6 +261,7 @@ const ProblemSubmissionForm = () => {
                   />
                 </div>
 
+                {/* Contact Email field */}
                 <FormField
                   control={form.control}
                   name="contactEmail"
@@ -249,6 +281,7 @@ const ProblemSubmissionForm = () => {
                   )}
                 />
 
+                {/* Problem Title field */}
                 <FormField
                   control={form.control}
                   name="problemTitle"
@@ -267,6 +300,7 @@ const ProblemSubmissionForm = () => {
                   )}
                 />
 
+                {/* Problem Description textarea */}
                 <FormField
                   control={form.control}
                   name="problemDescription"
@@ -285,6 +319,7 @@ const ProblemSubmissionForm = () => {
                   )}
                 />
 
+                {/* Category dropdown */}
                 <FormField
                   control={form.control}
                   name="category"
@@ -314,6 +349,7 @@ const ProblemSubmissionForm = () => {
                   )}
                 />
 
+                {/* Conditional Custom Category field - only shows when "Other" is selected */}
                 {selectedCategory === "Other" && (
                   <FormField
                     control={form.control}
@@ -334,6 +370,7 @@ const ProblemSubmissionForm = () => {
                   />
                 )}
 
+                {/* Additional Files/Links field */}
                 <FormField
                   control={form.control}
                   name="additionalFilesLinks"
@@ -355,6 +392,7 @@ const ProblemSubmissionForm = () => {
                   )}
                 />
 
+                {/* Privacy notice */}
                 <div className="bg-white/5 p-3 sm:p-4 rounded-lg border border-white/10">
                   <p className="text-xs sm:text-sm text-white/70 leading-relaxed">
                     <strong>Privacy Notice:</strong> Your information will only be used for club communications and project review. 
@@ -362,6 +400,7 @@ const ProblemSubmissionForm = () => {
                   </p>
                 </div>
 
+                {/* Submit button */}
                 <Button 
                   type="submit" 
                   className="w-full bg-white text-black hover:bg-gray-200 font-semibold py-3 text-sm sm:text-base" 
